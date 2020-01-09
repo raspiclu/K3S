@@ -1,0 +1,11 @@
+[master]
+master1 ansible_host=10.10.1.1 node_name=master1 node_ip=10.10.1.1
+
+[node]
+{% for _host in _dnsmasq_dhcp_leases['stdout_lines']|sort %}
+{{ 'worker1-' ~  _host.split(' ')[1][8:] }} ansible_host={{ _host.split(' ')[1] }} {{ 'node_name=worker1-' ~  _host.split(' ')[1][8:]}} {{ 'node_ip=' ~  _host.split(' ')[1] }}
+{% endfor %}
+
+[k3s-cluster:children]
+master
+node

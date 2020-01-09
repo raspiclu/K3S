@@ -1,0 +1,6 @@
+k3s_version: v0.8.1
+ansible_user: pi
+systemd_dir: /etc/systemd/system
+master_ip: "{{ hostvars[groups['master'][0]]['ansible_host'] | default(groups['master'][0]) }}"
+newHost_ip: "{{ hostvars[groups['node'][0]]['ansible_host'] | default (groups['node'][0]) }}"
+newHost_name: "{{ hostvars[groups['node'][0]['ansible_host'][0] }}"

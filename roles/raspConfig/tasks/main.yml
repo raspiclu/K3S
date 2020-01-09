@@ -1,0 +1,38 @@
+---
+
+- name: Vars set
+  debug:
+   msg: "Setze namen"
+ 
+  vars:
+   REBOOT: True #Should i reboot at the end of this playbook?
+   UPDATE: True
+   
+#2 Network Options
+
+#N1 Hostname
+- name: Get hostname
+  shell: "raspi-config nonint get_hostname"
+  register: pi_hostname
+  changed_when: False
+
+- name: Get ips
+  shell: "hostname -I"
+  register: all_ip
+  changed_when: False
+
+- name: Print current hostname
+  debug:
+   msg: "Current hostname: {{ pi_hostname.stdout }}"
+
+- name: Print current ips
+  debug:
+   msg: "Current ips: {{ all_ip.stdout }}"
+
+- name: Change hostname
+  shell: "raspi-config nonint do_hostname {{ 'worker1-' ~ all_ip.stdout.split(' ')[0][8:] }}"
+
+- name: Rebooting on Raspbian
+  reboot:
+   reboot_timeout: 120
+  ignore_errors: true

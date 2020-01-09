@@ -1,0 +1,25 @@
+---
+- hosts: master
+  gather_facts: yes
+  become: yes
+  roles:
+    - role: k3s/readmaster
+    - role: prepareNew
+      vars:
+        hostname: "{{ hostvars[groups['node'][0]].node_ip }}"
+        username: pi
+        password: raspberry
+        ssh_public_key: /home/pi/.ssh/id_rsa.pub
+        ssh_port: 22
+
+- hosts: node
+  gather_facts: yes
+  become: yes
+  roles:
+    - role: prereq
+    - role: download
+    - role: raspbian
+    - role: raspConfig 
+      vars:
+       hostname: "{{ hostvars[groups['node'][0]].node_name }}"      
+    - role: k3s/node

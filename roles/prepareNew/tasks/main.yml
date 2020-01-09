@@ -1,0 +1,16 @@
+---
+# tasks file for ansible-ssh-copy-id
+
+
+- name: Inject SSH public key into remote system
+  ssh_copy_id:
+    hostname: "{{ hostvars[groups['node'][index]].node_ip }}"
+    username: "{{'pi'  }}"
+    password: "{{ 'raspberry' }}"
+    ssh_public_key: "{{ '/home/pi/.ssh/id_rsa.pub' }}"
+    ssh_port: "{{ '22' }}"
+  loop: "{{ groups['node'] }}"
+  loop_control:
+     index_var: index
+  ignore_errors: true
+

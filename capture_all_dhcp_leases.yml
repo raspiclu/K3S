@@ -1,0 +1,15 @@
+---
+- hosts: master 
+  vars:
+  tasks:
+    - name: Capturing DNSMasq DHCP Leases
+      shell: cat /var/lib/misc/dnsmasq.leases | awk '{ print $4,$3,$2 }'
+      register: _dnsmasq_dhcp_leases
+      changed_when: false
+
+    - name: Updating {{ inventory_dir }}
+      template:
+        src: hosts.ini.j2
+        dest: "hosts.ini"
+      delegate_to: localhost
+      become: false
